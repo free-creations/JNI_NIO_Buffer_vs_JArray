@@ -1,0 +1,2 @@
+rootProject.name = 'JNI_NIO_Buffer_vs_JArray'
+include 'linux', 'java'

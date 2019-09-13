@@ -1,0 +1,61 @@
+
+plugins {
+  id 'java'
+  id 'application'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+
+dependencies {
+
+  // https://github.com/ibmsoe/jniloader
+  implementation group: 'com.github.fommil',  name:'jniloader', version: '1.1'
+
+  // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
+  // testing with jUnit version 5 and Google-truth.
+  test.useJUnitPlatform()
+  // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+  testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.5.2'
+  testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
+  testImplementation group: 'com.google.truth' ,name: 'truth', version: '1.0'
+  testImplementation group: 'com.google.truth.extensions' ,name: 'truth-java8-extension', version: '1.0'
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.2"
+
+
+}
+
+
+application {
+  mainClassName = 'Main'
+}
+
+ext {
+  headerDir = file("../linux/src/jni_headers")
+}
+
+compileJava {
+  // JNI headers to be written to ../linux/src/jni_headers
+  options.headerOutputDirectory = headerDir
+  //options.compilerArgs += "-Xlint:deprecation"
+}
+
+clean {
+  delete fileTree(headerDir) {
+    include '**/*.h'
+  }
+}
+
+test {
+  // set JVM arguments for the test JVM(s)
+  //jvmArgs "-verbose:jni", "-ea"
+}
+
+
+
