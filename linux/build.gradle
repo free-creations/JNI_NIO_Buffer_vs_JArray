@@ -1,0 +1,61 @@
+/*
+ * Copyright 2019 Harald Postner.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * A gradle wrapper that runs the CMake-build-system to compile and link the native C++ source.
+ */
+
+plugins {
+  // The "gradle-cmake-plugin" allows to configure and build using CMake.
+  //https://plugins.gradle.org/plugin/net.freudasoft.gradle-cmake-plugin
+  //https://github.com/freudi74/gradle-cmake-plugin
+  id "net.freudasoft.gradle-cmake-plugin" version "0.0.4"
+}
+
+ext {
+  buildType = 'Release' // or 'Debug'
+  deliveryDir = file("${buildDir}/out")
+  javaResourcesDir = file("${projectDir}/../java/src/main/resources/native/")
+}
+
+cmake {
+  sourceFolder = project.projectDir
+  workingFolder = file("${project.buildDir}/${buildType}")
+
+  buildConfig=buildType
+
+  def.VERSION=project.version
+  def.LIB_NAME = "${rootProject.name}-${rootProject.version}"
+  def.DELIVERIES_DIR = deliveryDir.toString()
+  def.WITH_UNIT_TESTS = "OFF"
+  def.CMAKE_BUILD_TYPE = buildType
+}
+
+tasks.create('copyLib' , Copy) {
+  dependsOn cmakeBuild
+  from deliveryDir
+  into javaResourcesDir
+  include('*.so')
+}
+
+
+cmakeClean {
+  doLast {
+    delete fileTree("${projectDir}/../java/src/main/resources/native/") {
+      include('*.so')
+    }
+  }
+}

@@ -14,7 +14,7 @@ public class Main {
   private static final int MAX_CYCLE_LENGTH = 4096;
 
   static void loadNativeLib() {
-    System.load("/home/harald/workspace/CLionExperiments/JniNio_vs_JavaArray/linux/cmake-build-release/src/libjninio.so");
+    System.load("/home/harald/workspace/JNI_NIO_Buffer_vs_JArray/java/src/main/resources/native/libJNI_NIO_Buffer_vs_JArray-0.1-SNAPSHOT.so");
   }
 
   /**

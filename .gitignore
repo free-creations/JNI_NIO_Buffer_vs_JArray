@@ -61,6 +61,8 @@ hs_err_pid*
 ### Gradle template
 .gradle
 /build/
+/linux/build/
+/java/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -158,3 +160,4 @@ fabric.properties
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+

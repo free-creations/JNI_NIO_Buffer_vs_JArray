@@ -21,11 +21,15 @@
 # we need the header files of the Java Development Kit.
 find_package(JNI REQUIRED)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 #
-add_library(${LIB_NAME} SHARED) # LIB_NAME is defined in the calling CMakeLists.txt
-target_sources(${LIB_NAME} PUBLIC main.cpp)
+add_library(${LIB_NAME} SHARED main.cpp) # LIB_NAME is defined in the calling CMakeLists.txt
 target_include_directories(${LIB_NAME} PUBLIC ${JNI_INCLUDE_DIRS})
 target_link_libraries(${LIB_NAME} ${JNI_LIBRARIES})
+
