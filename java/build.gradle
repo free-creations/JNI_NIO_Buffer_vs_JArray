@@ -57,3 +57,19 @@ processResources{
   dependsOn ':linux:copyLib'
 }
 
+task uberJar(type: Jar) {
+  archiveClassifier = 'uber'
+
+  from sourceSets.main.output
+
+  dependsOn configurations.runtimeClasspath
+  from {
+    configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+  }
+  manifest {
+    attributes(
+        'Main-Class': mainClassName,
+        'Implementation-Version': rootProject.version
+    )
+  }
+}

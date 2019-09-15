@@ -1,6 +1,7 @@
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import com.github.fommil.jni.JniLoader;
 
 import static org.apache.commons.lang3.math.NumberUtils.toInt;
 
@@ -14,7 +15,7 @@ public class Main {
   private static final int MAX_CYCLE_LENGTH = 4096;
 
   static void loadNativeLib() {
-    System.load("/home/harald/workspace/JNI_NIO_Buffer_vs_JArray/java/build/resources/main/native/libbenchmark.so");
+    JniLoader.load("native/libbenchmark.so");
   }
 
   /**
