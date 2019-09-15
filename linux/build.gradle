@@ -38,7 +38,7 @@ cmake {
   buildConfig=buildType
 
   def.VERSION=project.version
-  def.LIB_NAME = "${rootProject.name}-${rootProject.version}"
+  def.LIB_NAME = "benchmark"
   def.DELIVERIES_DIR = deliveryDir.toString()
   def.WITH_UNIT_TESTS = "OFF"
   def.CMAKE_BUILD_TYPE = buildType
@@ -51,6 +51,10 @@ tasks.create('copyLib' , Copy) {
   include('*.so')
 }
 
+cmakeBuild {
+  dependsOn ':java:compileJava'
+}
+
 
 cmakeClean {
   doLast {
@@ -58,4 +62,9 @@ cmakeClean {
       include('*.so')
     }
   }
+}
+
+task clean(type: Delete) {
+  dependsOn cmakeClean
+  delete buildDir
 }

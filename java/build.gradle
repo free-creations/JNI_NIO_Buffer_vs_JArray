@@ -52,10 +52,8 @@ clean {
   }
 }
 
-test {
-  // set JVM arguments for the test JVM(s)
-  //jvmArgs "-verbose:jni", "-ea"
+
+processResources{
+  dependsOn ':linux:copyLib'
 }
-
-
 

@@ -7,14 +7,14 @@ import static org.apache.commons.lang3.math.NumberUtils.toInt;
 public class Main {
 
   /**
-   * The number of frames (a.k. samples) in one cycle.
+   * The number of frames (a.k.a samples) in one cycle.
    * 256 is a typical value.
    */
   private static final int CYCLE_LENGTH = 256;
   private static final int MAX_CYCLE_LENGTH = 4096;
 
   static void loadNativeLib() {
-    System.load("/home/harald/workspace/JNI_NIO_Buffer_vs_JArray/java/src/main/resources/native/libJNI_NIO_Buffer_vs_JArray-0.1-SNAPSHOT.so");
+    System.load("/home/harald/workspace/JNI_NIO_Buffer_vs_JArray/java/build/resources/main/native/libbenchmark.so");
   }
 
   /**
