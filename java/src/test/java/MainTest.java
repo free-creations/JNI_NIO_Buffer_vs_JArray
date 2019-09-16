@@ -191,4 +191,13 @@ class MainTest {
   }
 
 
+  /**
+   * `nativeNullOp` shall return whatever is input.
+   */
+  @Test
+  void nativeNullOp() {
+    long arbitraryVal = 12345;
+    assertThat(Main.nativeNullOp(arbitraryVal)).isEqualTo(arbitraryVal);
+
+  }
 }

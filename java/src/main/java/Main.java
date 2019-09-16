@@ -64,6 +64,28 @@ public class Main {
 
 
   /**
+   * A native call that does nothing, besides returning the value that was input.
+   *
+   * This can be used to measure the minimum time a native call can take.
+   *
+   * @param val an arbitrary value.
+   * @return the value that was put in.
+   */
+  static native long nativeNullOp(long val);
+
+  /**
+   * A java call that does nothing, besides returning the value that was input.
+   *
+   * We'll use this to compare to `nativeNullOp`.
+   *
+   * @param val an arbitrary value.
+   * @return the value that was put in.
+   */
+  static long javaNullOp(long val){
+    return val;
+  }
+
+  /**
    * Simulate the writing of data into the native world using direct buffers.
    *
    * The native implementation shall use `GetDirectBufferAddress` to access the buffer data
@@ -166,10 +188,43 @@ public class Main {
 
     loadNativeLib();
 
+    JNI_NoOp_vs_Java_NoOp(cycleLength);
     writeDirectBuffer_vs_writeJArray(cycleLength);
     readDirectBuffer_vs_readJArray(cycleLength);
     process_array_vs_buffer(cycleLength);
   }
+
+  private static void JNI_NoOp_vs_Java_NoOp(int cycleLength) {
+    System.err.print("\nDoing nothing in JNI vs. Doing nothing in Java\n");
+    long repetitions = 25000000000L / cycleLength;
+    long start_ms;
+    long end_ms;
+
+    long x = 0;
+
+
+    start_ms = System.currentTimeMillis();
+    for (long i = 0; i < repetitions; i++) {
+      x += nativeNullOp(i);
+    }
+    end_ms = System.currentTimeMillis();
+    long nativeCallsFullDuration_ms = end_ms - start_ms;
+    reportMeasurement("nativeNullOp", cycleLength, repetitions, start_ms, end_ms);
+    System.err.println("      ... x="+x);
+
+    x = 0;
+    start_ms = System.currentTimeMillis();
+    for (long i = 0; i < repetitions; i++) {
+      x += javaNullOp(i);
+    }
+    end_ms = System.currentTimeMillis();
+    long javaCallsFullDuration_ms = end_ms - start_ms;
+    reportMeasurement("javaNullOp", cycleLength, repetitions, start_ms, end_ms);
+    System.err.println("      ... x="+x);
+
+    reportConclusion("javaNullOp", "nativeNullOp",  1d/javaCallsFullDuration_ms, 1d/nativeCallsFullDuration_ms);
+  }
+
 
   private static void writeDirectBuffer_vs_writeJArray(int cycleLength) {
     System.err.print("\nWriting using direct buffer vs writing using JArray\n");
@@ -276,13 +331,13 @@ public class Main {
     double possible_calls_perCycle = cycleTime_ms / perCall_ms; // the number of times, we can do this operation in one cycle
 
     System.err.printf("--- %s-%d takes %.1f ns per call. (testing-time %.0f ms)%n", subject, cycleLength, perCall_ms * 1e6, duration_ms);
-    System.err.printf("    maximum calls per cycle: %.0f%n", possible_calls_perCycle);
+    System.err.printf("    maximum calls per audio cycle: %.0f%n", possible_calls_perCycle);
     System.err.printf("    calls per second: %.0f%n", 1000d/perCall_ms);
 
   }
 
-  private static void reportConclusion(String subject_1, String subject_2, double speed_1, double speed_2) {
-    double factor = (100d * speed_1/speed_2) -100d;
-    System.err.printf("%s is by %.2f%% faster than %s.%n", subject_1, factor, subject_2);
+  private static void reportConclusion(String subject_1, String subject_2, double performance_1, double performance_2) {
+    double factor = (100d * performance_1/performance_2) -100d;
+    System.err.printf("%s performs by %.2f%% better than %s.%n", subject_1, factor, subject_2);
   }
 }

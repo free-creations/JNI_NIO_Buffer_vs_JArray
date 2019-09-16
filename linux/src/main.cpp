@@ -33,7 +33,18 @@ using namespace std;
  */
 static float localBuffer[MAX_CYCLE_LENGTH];
 
-
+/**
+ * A native call that does nothing, besides returning the value that was input.
+ *
+ * This can be used to measure the minimum time a native call can take.
+ *
+ * @param val an arbitrary value.
+ * @return the value that was put in.
+ */
+JNIEXPORT jlong JNICALL Java_Main_nativeNullOp
+        (JNIEnv *, jclass, jlong val){
+    return val;
+}
 
 /**
  * Simulate the writing of data into the native world using direct buffers.
